@@ -109,3 +109,61 @@ document.addEventListener('DOMContentLoaded', () => {
         heatmapImage.src = heatmapSrc;
     }
 });
+
+let timeout;
+
+function debouncedSearch() {
+  clearTimeout(timeout);
+  timeout = setTimeout(searchLocation, 300);
+}
+
+function searchLocation() {
+  const query = document.getElementById('location').value;
+  if (query.length < 3) return;
+
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+    .then(res => res.json())
+    .then(data => {
+      const list = document.getElementById('suggestions');
+      list.innerHTML = '';
+      data.slice(0, 5).forEach(place => {
+        const item = document.createElement('li');
+        item.textContent = place.display_name;
+        item.classList.add('suggestion-item');
+        item.addEventListener('click', () => {
+          document.getElementById('location').value = place.display_name;
+          list.innerHTML = '';
+        });
+        list.appendChild(item);
+      });
+    });
+}
+
+function getMyLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        // Reverse geocoding using Nominatim
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById('location').value = data.display_name || `${lat}, ${lon}`;
+          });
+      },
+      (error) => {
+        alert("Unable to retrieve location.");
+        console.error(error);
+      }
+    );
+  } else {
+    alert("Geolocation not supported.");
+  }
+}
+
+function useCurrentTime() {
+  const now = new Date();
+  const formatted = now.toTimeString().slice(0, 5); // HH:MM
+  document.getElementById('time').value = formatted;
+}

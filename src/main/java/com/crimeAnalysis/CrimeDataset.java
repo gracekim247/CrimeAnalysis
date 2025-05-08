@@ -120,20 +120,20 @@ public class CrimeDataset {
     }
 
     //test 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.err.println("Usage: java com.crimeAnalysis.CrimeDataset <csv-path>");
-            System.exit(1);
-        }
-        CrimeDataset ds = new CrimeDataset();
-        ds.load(args[0]);
-        ds.imputeMissingValues();
-        ds.labelData();
-        System.out.println("Records: " + ds.getRecords().size());
+    // public static void main(String[] args) throws IOException {
+    //     if (args.length != 1) {
+    //         System.err.println("Usage: java com.crimeAnalysis.CrimeDataset <csv-path>");
+    //         System.exit(1);
+    //     }
+    //     CrimeDataset ds = new CrimeDataset();
+    //     ds.load(args[0]);
+    //     ds.imputeMissingValues();
+    //     ds.labelData();
+    //     System.out.println("Records: " + ds.getRecords().size());
 
-        for (CrimeRecord r : ds.getRecords()) {
-            System.out.println(r);
-        }
-    }
+    //     for (CrimeRecord r : ds.getRecords()) {
+    //         System.out.println(r);
+    //     }
+    // }
 }
 

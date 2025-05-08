@@ -1,7 +1,6 @@
 package com.crimeAnalysis.model;
 
 import com.crimeAnalysis.CrimeDataset;
-// import com.crimeAnalysis.CrimeRecord;
 
 // import java.io.*;
 // import java.net.URISyntaxException;
@@ -10,15 +9,18 @@ import com.crimeAnalysis.CrimeDataset;
 
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
-//import smile.io.Read;
+import smile.base.cart.SplitRule;
 import smile.classification.RandomForest;
 import smile.data.vector.IntVector;
+// import smile.validation.ClassificationValidation;
+// import smile.validation.metric.Accuracy;
 
 public class RandomForestModel {
    public static void main(String[] args) throws Exception {
       CrimeDataset ds = new CrimeDataset();
 
-      ds.load("data/harrassmentAndAssaultData.csv");
+      //ds.load("data/toyDataset.csv");
+      ds.load(args[0]);
       ds.imputeMissingValues();
       ds.labelData();
 
@@ -26,82 +28,64 @@ public class RandomForestModel {
       double[][] x = ds.getFeatureArray();
       int[] y = ds.getLabelArray();
 
-      // // Create a random train/test split (80/20)
-      // int n = x.length;
-      // int trainSize = (int) (n * 0.8);
-      // int[] idx = IntStream.range(0, n).toArray();
-
-      // // shuffle indices
-      // Random rnd = new Random(42);  // fixed seed for reproducibility
-      // for (int i = n - 1; i > 0; i--) {
-      //    int j = rnd.nextInt(i + 1);
-      //    int tmp = idx[i];
-      //    idx[i] = idx[j];
-      //    idx[j] = tmp;
-      // }
-
-      // // allocate train
-      // double[][] xtrain = new double[trainSize][];
-      // int[] ytrain = new int[trainSize];
-
-      // //allocate test
-      // double[][] xtest  = new double[n - trainSize][];
-      // int[] ytest  = new int[n - trainSize];
-
-      // // fill train
-      // for (int i = 0; i < trainSize; i++) {
-      //    xtrain[i] = x[idx[i]];
-      //    ytrain[i] = y[idx[i]];
-      // }
-
-      // // fill test
-      // for (int i = trainSize; i < n; i++) {
-      //    xtest[i - trainSize] = x[idx[i]];
-      //    ytest[i - trainSize] = y[idx[i]];
-      // }
-
       // build DataFrame from features
-      String[] featureNames = {
-         "age", "sex", "race", "borough", "hour", "latitude", "longitude"
-      };
+      String[] featureNames = {"age", "sex", "race", "borough", "hour", "latitude", "longitude"};
 
-      DataFrame df = DataFrame
-            .of(x, featureNames)
-            .merge(new DataFrame(new IntVector("label", y)));
+      // DataFrame df = DataFrame
+      //       .of(x, featureNames)
+      //       .merge(new DataFrame(new IntVector("label", y)));
+      DataFrame df = DataFrame.of(x, featureNames)
+            .merge(IntVector.of("label", y));
 
 
-      // DataFrame trainDf = DataFrame.of(xtrain, featureNames);
-      // // wrap your label vector in its own DataFrame
-      // DataFrame trainLabelDf = new DataFrame(new IntVector("label", ytrain));
-      // // merge horizontally
-      // trainDf = trainDf.merge(trainLabelDf);
+      // 4) Specify the formula for supervised learning
+      Formula formula = Formula.lhs("label");
 
-      // DataFrame testDf = DataFrame.of(xtest, featureNames);
-      // DataFrame testLabelDf = new DataFrame(new IntVector("label", ytrain));
-      // testDf = testDf.merge(testLabelDf);
+      // 5) Hyperparameters for RF (Smile 2.x style)
+      int    ntrees    = 150;
+      int    mtry      = (int)Math.sqrt(featureNames.length);
+      SplitRule rule   = SplitRule.GINI;
+      int    maxDepth  = 15;
+      int    maxNodes  = x.length;
+      int    nodeSize  = 50;
+      double subsample = 0.7;
 
-      // train
-      RandomForest rf = RandomForest.fit(Formula.lhs("label"), df);
-
-      // Predict on test set
-      // int[] pred = new int[ytest.length];
-      // for (int i = 0; i < testDf.nrow(); i++) {
-      //    pred[i] = rf.predict(testDf.get(i));
-      // }
-
-      // Print accuracy
-      System.out.printf("RandomForest with %d trees, OOB error = %.4f%n",
-         rf.size()
+      // 6) Train using the 9-arg overload available in Smile 2.6.0
+      RandomForest rf = RandomForest.fit(
+          formula,
+          df,
+          ntrees,
+          mtry,
+          rule,
+          maxDepth,
+          maxNodes,
+          nodeSize,
+          subsample
       );
-     //System.out.printf("Test accuracy: %.2f%%%n", 100*accuracy(ytest, pred));
-  }
 
-   // Simple accuracy helper
-   // private static double accuracy(int[] truth, int[] pred) {
-   //    int correct = 0;
-   //    for (int i = 0; i < truth.length; i++) {
-   //       if (truth[i] == pred[i]) correct++;
-   //    }
-   //    return (double) correct / truth.length;
-   // }
+
+      // Evaluate the model on the training data
+      int[] predictions = new int[df.size()];
+      for (int i = 0; i < df.size(); i++) {
+          predictions[i] = rf.predict(df.get(i));
+      }
+      
+      // Calculate accuracy
+      int correct = 0;
+      int[] actual = df.column("label").toIntArray();
+      for (int i = 0; i < actual.length; i++) {
+          if (predictions[i] == actual[i]) {
+              correct++;
+          }
+      }
+      double accuracy = (double) correct / actual.length;
+      double error = 1.0 - accuracy;
+      
+      // Print results
+      System.out.printf("RandomForest with %d trees, error rate = %.4f%n",
+         rf.size(), error
+      );
+      
+      System.out.printf("Training accuracy: %.4f%n", accuracy);
+   }
 }

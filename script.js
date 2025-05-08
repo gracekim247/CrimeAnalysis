@@ -19,27 +19,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   riskForm.addEventListener("submit", function (e) {
     e.preventDefault();
+    
     const age = document.getElementById("age").value;
     const sex = document.getElementById("sex").value;
-    const ethnicity = document.getElementById("ethnicity").value;
-    const borough = document.getElementById("borough").value;
-    const time = document.getElementById("timeOfDay").value;
-
-    // Placeholder risk logic — replace with backend or model call
-    let risk = "Low";
-    if (borough === "bronx" || time === "night") risk = "High";
-    else if (borough === "brooklyn") risk = "Medium";
-
-    // Show result
-    assessmentForm.style.display = "none";
-    resultsSection.style.display = "block";
-    riskLevelDisplay.textContent = `Estimated Risk Level: ${risk}`;
+    const race = document.getElementById("race").value;
+    const location = document.getElementById("location").value;
+    const time = document.getElementById("time").value;
     
-    // Scroll to results section
-    document.getElementById("results").scrollIntoView({ behavior: "smooth" });
-    
+    // Prepare the data to be sent via POST
+    const formData = new FormData();
+    formData.append("age", age);
+    formData.append("sex", sex);
+    formData.append("race", race);
+    formData.append("location", location);
+    formData.append("time", time);
+  
+    // Send the data using the form submission
+    fetch("/submitRisk", {
+      method: "POST",
+      body: formData
+    })
+    .then(response => response.text())  // Assuming the backend sends text response
+    .then(responseText => {
+      // Process the response from the server
+      console.log(responseText);
+      riskLevelDisplay.textContent = responseText;  // Display the response in a div
+      resultsSection.style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
   });
+  
 });
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const startButton = document.querySelector(".start-button");

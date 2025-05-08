@@ -47,7 +47,7 @@
                     <p class="form-subtitle">Enter your details for a personalized risk assessment</p>
 
                     <!-- For the Assessment Form section, update the form structure as follows: -->
-                    <form id="risk-form">
+                    <form id="risk-form" action="/processRisk" method="POST">
                         <!-- Age, Sex, Race in one row -->
                         <div class="form-row demographics-row">
                             <div class="form-group">
@@ -82,21 +82,19 @@
                             </div>
                         </div>
 
-                        <!-- Location in its own row -->
                         <div class="form-row">
                             <div class="form-group location-group">
                                 <label for="location">Your Location</label>
                                 <div class="input-with-button">
                                     <input id="location" name="location" type="text" placeholder="Enter your location"
                                         required oninput="debouncedSearch()" />
-                                    <button type="button" class="inline-button" onclick="getMyLocation()">Use My
+                                    <button type="button" class="inline-button" aria-label="Use my current location" onclick="getMyLocation()">Use My
                                         Location</button>
                                 </div>
                                 <ul id="suggestions" class="suggestion-list"></ul>
                             </div>
                         </div>
 
-                        <!-- Time in its own row -->
                         <div class="form-row">
                             <div class="form-group time-group">
                                 <label for="time">Time of Day</label>

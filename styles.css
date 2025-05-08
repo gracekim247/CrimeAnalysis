@@ -249,6 +249,60 @@ body {
     margin-bottom: 25px;
 }
 
+
+/* Style for the inline buttons that match your theme */
+.inline-button {
+    background-color: #577d9d;
+    color: #bbe1ff;
+    border: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    margin-top: 8px;
+    box-shadow: 0 2px 6px rgba(3, 36, 67, 0.15);
+}
+
+.inline-button:hover {
+    background-color: #334a6c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(3, 36, 67, 0.2);
+}
+
+.inline-button:active {
+    transform: translateY(0);
+}
+
+.form-row:first-of-type {
+    max-width: 100%;
+}
+
+#age, #sex, #race {
+    width: 200px;
+    padding: 10px;
+    height: 45px;
+}
+
+/* Additional responsive adjustments */
+@media (max-width: 768px) {
+    .demographics-row {
+        flex-direction: column;
+    }
+    
+    .input-with-button {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .inline-button {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
 .form-group {
     flex: 1;
 }
@@ -276,6 +330,21 @@ body {
     outline: none;
     border-color: #032443;
     box-shadow: 0 0 0 3px rgba(172, 200, 229, 0.3);
+}
+
+/* Make age and sex dropdown buttons shorter */
+#age, #sex, #race {
+    width: 100%;
+    padding: 5px;
+    height: 42px;
+}
+
+/* Make the form-row for age and sex have a max-width */
+.form-row {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 25px;
+    justify-content: center;
 }
 
 .input-help {
@@ -340,6 +409,8 @@ body {
   .secondary-action:hover {
     background-color: #6b8eaf;
   }
+
+  
   
   #risk-level {
     display: flex;

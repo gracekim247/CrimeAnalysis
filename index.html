@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <main class="main-container">
         <div class="content-area">
@@ -18,7 +20,8 @@
                         <h1 class="welcome-title">CRIMECAST</h1>
                     </div>
                     <p class="welcome-text">
-                        Want to know how safe your area is? Get personalized crime risk insights based on your location and demographics—it's quick, simple, and tailored just for you.
+                        Want to know how safe your area is? Get personalized crime risk insights based on your location
+                        and demographics—it's quick, simple, and tailored just for you.
                     </p>
                     <div class="features-grid">
                         <div class="feature-item">
@@ -42,14 +45,17 @@
                 <div class="form-card">
                     <h2 class="form-title">Your Safety Profile</h2>
                     <p class="form-subtitle">Enter your details for a personalized risk assessment</p>
-                    
+
+                    <!-- For the Assessment Form section, update the form structure as follows: -->
                     <form id="risk-form">
-                        <div class="form-row">
+                        <!-- Age, Sex, Race in one row -->
+                        <div class="form-row demographics-row">
                             <div class="form-group">
                                 <label for="age">Age</label>
                                 <select id="age" name="age" required>
                                     <option value="" disabled selected>Select one</option>
-                                    <option value="lessthan18>"><18</option>
+                                    <option value="lessthan18>">
+                                        <18</option>
                                     <option value="18-24">18-24</option>
                                     <option value="25-44">25-44</option>
                                     <option value="45-64">45-64</option>
@@ -64,8 +70,6 @@
                                     <option value="female">Female</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-row">
                             <div class="form-group">
                                 <label for="race">Race</label>
                                 <select id="race" name="race" required>
@@ -77,31 +81,34 @@
                                     <option value="american-indian">American Indian/Alaskan Native</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="borough">Current Borough</label>
-                                <select id="borough" name="borough" required>
-                                    <option value="" disabled selected>Select one</option>
-                                    <option value="manhattan">Manhattan</option>
-                                    <option value="brooklyn">Brooklyn</option>
-                                    <option value="queens">Queens</option>
-                                    <option value="bronx">The Bronx</option>
-                                    <option value="staten-island">Staten Island</option>
-                                </select>
-                            </div>
                         </div>
-                        
+
+                        <!-- Location in its own row -->
                         <div class="form-row">
-                            <div class="form-group">
-                                <label for="timeOfDay">Time of Day</label>
-                                <select id="timeOfDay" name="timeOfDay">
-                                    <option value="all">All Times</option>
-                                    <option value="morning">Morning (6AM-12PM)</option>
-                                    <option value="afternoon">Afternoon (12PM-6PM)</option>
-                                    <option value="evening">Evening (6PM-12AM)</option>
-                                    <option value="night">Night (12AM-6AM)</option>
-                                </select>
+                            <div class="form-group location-group">
+                                <label for="location">Your Location</label>
+                                <div class="input-with-button">
+                                    <input id="location" name="location" type="text" placeholder="Enter your location"
+                                        required oninput="debouncedSearch()" />
+                                    <button type="button" class="inline-button" onclick="getMyLocation()">Use My
+                                        Location</button>
+                                </div>
+                                <ul id="suggestions" class="suggestion-list"></ul>
                             </div>
                         </div>
+
+                        <!-- Time in its own row -->
+                        <div class="form-row">
+                            <div class="form-group time-group">
+                                <label for="time">Time of Day</label>
+                                <div class="input-with-button">
+                                    <input type="time" id="time" name="time" />
+                                    <button type="button" class="inline-button" onclick="useCurrentTime()">Use Current
+                                        Time</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-actions">
                             <button type="button" class="cancel-button">Cancel</button>
                             <button type="submit" id="analyze-button" class="action-button">
@@ -116,50 +123,54 @@
             <!-- Results Section -->
             <div class="results-section" style="display: none">
                 <div class="results-container">
-                <h2 class="form-title">Your Crime Risk Report</h2>
-                <p class="form-subtitle">Based on your profile and selected borough, here is your estimated safety risk.</p>
-                <div id="risk-level" style="margin-top: 30px; font-size: 1.5rem; font-weight: bold; color: #032443;"></div>
-                <button onclick="location.reload()" class="action-button" style="margin-top: 30px;">
-                    Start New Assessment
-                </button>
-                <div class="result-actions">
-                    <button id="view-heatmap-btn" class="action-button secondary-action">
-                      <span>View Crime Heatmap</span>
-                      <i class="fas fa-map-marked-alt"></i>
+                    <h2 class="form-title">Your Crime Risk Report</h2>
+                    <p class="form-subtitle">Based on your profile and selected borough, here is your estimated safety
+                        risk.</p>
+                    <div id="risk-level"
+                        style="margin-top: 30px; font-size: 1.5rem; font-weight: bold; color: #032443;"></div>
+                    <button onclick="location.reload()" class="action-button" style="margin-top: 30px;">
+                        Start New Assessment
                     </button>
-                  </div>
+                    <div class="result-actions">
+                        <button id="view-heatmap-btn" class="action-button secondary-action">
+                            <span>View Crime Heatmap</span>
+                            <i class="fas fa-map-marked-alt"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="heatmap-view" style="display: none;">
                 <div class="heatmap-container">
-                  <h3>Your Personalized Crime Heatmap</h3>
-                  <p class="heatmap-description">This visualization shows crime hotspots in your selected borough based on recent data.</p>
-                  <div class="heatmap-legend">
-                    <div class="legend-item">
-                      <span class="legend-color" style="background-color: #dc0000;"></span>
-                      <span>High Risk</span>
+                    <h3>Your Personalized Crime Heatmap</h3>
+                    <p class="heatmap-description">This visualization shows crime hotspots in your selected borough
+                        based on recent data.</p>
+                    <div class="heatmap-legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #dc0000;"></span>
+                            <span>High Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #fd8c00;"></span>
+                            <span>Medium Risk</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: #00ac46;"></span>
+                            <span>Low Risk</span>
+                        </div>
                     </div>
-                    <div class="legend-item">
-                      <span class="legend-color" style="background-color: #fd8c00;"></span>
-                      <span>Medium Risk</span>
+                    <div class="heatmap-visualization">
+                        <img src="heatmap-placeholder.png" alt="Crime Heatmap" id="heatmap-image">
                     </div>
-                    <div class="legend-item">
-                      <span class="legend-color" style="background-color: #00ac46;"></span>
-                      <span>Low Risk</span>
-                    </div>
-                  </div>
-                  <div class="heatmap-visualization">
-                    <img src="heatmap-placeholder.png" alt="Crime Heatmap" id="heatmap-image">
-                  </div>
-                  <button id="back-to-results" class="action-button">
-                    <span>Back to Results</span>
-                    <i class="fas fa-arrow-left"></i>
-                  </button>
+                    <button id="back-to-results" class="action-button">
+                        <span>Back to Results</span>
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
                 </div>
-              </div>
+            </div>
         </div>
     </main>
 
     <script src="script.js"></script>
 </body>
+
 </html>

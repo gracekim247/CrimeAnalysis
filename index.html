@@ -5,8 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CrimeCast - Safety Risk Assessment</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
+    <style>
+        /* Add this to ensure the map container has a height */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 8px;
+        }
+    </style>
 </head>
 
 <body>
@@ -46,8 +59,7 @@
                     <h2 class="form-title">Your Safety Profile</h2>
                     <p class="form-subtitle">Enter your details for a personalized risk assessment</p>
 
-                    <!-- For the Assessment Form section, update the form structure as follows: -->
-                    <form id="risk-form" action="/processRisk" method="POST">
+                    <form id="risk-form">
                         <!-- Age, Sex, Race in one row -->
                         <div class="form-row demographics-row">
                             <div class="form-group">
@@ -87,11 +99,11 @@
                                 <label for="location">Your Location</label>
                                 <div class="input-with-button">
                                     <input id="location" name="location" type="text" placeholder="Enter your location"
-                                        required oninput="debouncedSearch()" />
-                                    <button type="button" class="inline-button" aria-label="Use my current location" onclick="getMyLocation()">Use My
-                                        Location</button>
+                                        required />
+                                    <button type="button" class="inline-button" onclick="getMyLocation()">
+                                        Use My Location
+                                    </button>
                                 </div>
-                                <ul id="suggestions" class="suggestion-list"></ul>
                             </div>
                         </div>
 
@@ -99,9 +111,10 @@
                             <div class="form-group time-group">
                                 <label for="time">Time of Day</label>
                                 <div class="input-with-button">
-                                    <input type="time" id="time" name="time" />
-                                    <button type="button" class="inline-button" onclick="useCurrentTime()">Use Current
-                                        Time</button>
+                                    <input type="time" id="time" name="time" required />
+                                    <button type="button" class="inline-button" onclick="useCurrentTime()">
+                                        Use Current Time
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -139,7 +152,7 @@
             <div class="heatmap-view" style="display: none;">
                 <div class="heatmap-container">
                     <h3>Your Personalized Crime Heatmap</h3>
-                    <p class="heatmap-description">Explore the areas in your selected borough where crime has been more frequent. Be alert and informed.</p>
+                    <p class="heatmap-description">Crime hotspots based on your demographic profile</p>
                     <div class="heatmap-legend">
                         <div class="legend-item">
                             <span class="legend-color" style="background-color: #dc0000;"></span>
@@ -154,9 +167,7 @@
                             <span>Low Risk</span>
                         </div>
                     </div>
-                    <div class="heatmap-visualization">
-                        <img src="heatmap-placeholder.png" alt="Crime Heatmap" id="heatmap-image">
-                    </div>
+                    <div id="map" style="height: 500px; width: 100%;"></div>
                     <button id="back-to-results" class="action-button">
                         <span>Back to Results</span>
                         <i class="fas fa-arrow-left"></i>

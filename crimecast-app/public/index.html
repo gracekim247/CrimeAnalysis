@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrimeCast - Safety Risk Assessment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <main class="main-container">
+        <div class="content-area">
+            <!-- Welcome Screen -->
+            <div class="welcome-container">
+                <div class="welcome-content">
+                    <div class="welcome-logo">
+                        <img src="logo.png" alt="CrimeCast Logo">
+                        <h1 class="welcome-title">CRIMECAST</h1>
+                    </div>
+                    <p class="welcome-text">
+                        Want to know how safe your area is? Get personalized crime risk insights based on your location
+                        and demographics—it's quick, simple, and tailored just for you.
+                    </p>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Location-based risk assessment</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Real-time crime data</span>
+                        </div>
+                    </div>
+                    <button class="start-button action-button">
+                        <span>Start Assessment</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Assessment Form -->
+            <div class="assessment-form" style="display: none;">
+                <div class="form-card">
+                    <h2 class="form-title">Your Safety Profile</h2>
+                    <p class="form-subtitle">Enter your details for a personalized risk assessment</p>
+
+                    <!-- For the Assessment Form section, update the form structure as follows: -->
+                    <form id="risk-form" action="/processRisk" method="POST">
+                        <!-- Age, Sex, Race in one row -->
+                        <div class="form-row demographics-row">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <select id="age" name="age" required>
+                                    <option value="" disabled selected>Select one</option>
+                                    <option value="lessthan18">&lt;18</option>
+                                    <option value="18-24">18-24</option>
+                                    <option value="25-44">25-44</option>
+                                    <option value="45-64">45-64</option>
+                                    <option value="65+">65+</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sex">Sex</label>
+                                <select id="sex" name="sex" required>
+                                    <option value="" disabled selected>Select one</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="race">Race</label>
+                                <select id="race" name="race" required>
+                                    <option value="" disabled selected>Select one</option>
+                                    <option value="white">White</option>
+                                    <option value="black">Black</option>
+                                    <option value="asian">Asian/Pacific Islander</option>
+                                    <option value="hispanic">Hispanic/Latino</option>
+                                    <option value="american-indian">American Indian/Alaskan Native</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group location-group">
+                                <label for="location">Your Location</label>
+                                <div class="input-with-button">
+                                    <input id="location" name="location" type="text" placeholder="Enter your location"
+                                        required oninput="debouncedSearch()" />
+                                    <button type="button" class="inline-button" aria-label="Use my current location" onclick="getMyLocation()">Use My
+                                        Location</button>
+                                </div>
+                                <ul id="suggestions" class="suggestion-list"></ul>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group time-group">
+                                <label for="time">Time of Day</label>
+                                <div class="input-with-button">
+                                    <input type="time" id="time" name="time" />
+                                    <button type="button" class="inline-button" onclick="useCurrentTime()">Use Current
+                                        Time</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="cancel-button">Cancel</button>
+                            <button type="submit" id="analyze-button" class="action-button">
+                                <span>Analyze Risk</span>
+                                <i class="fas fa-chart-pie"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results" class="results-section" style="display: none">
+                <div class="results-container">
+                    <h2 class="form-title">Your Crime Risk Report</h2>
+                    <p class="form-subtitle">Based on your profile and selected borough, here is your estimated safety
+                        risk.</p>
+                    <div id="risk-level"
+                        style="margin-top: 30px; font-size: 1.5rem; font-weight: bold; color: #032443;"></div>
+                    <button onclick="location.reload()" class="action-button" style="margin-top: 30px;">
+                        Start New Assessment
+                    </button>
+                    <div class="result-actions">
+                        <button id="view-heatmap-btn" class="action-button secondary-action">
+                            <span>View Crime Heatmap</span>
+                            <i class="fas fa-map-marked-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+           <!-- Replace the existing heatmap-view section in your HTML with this updated version -->
+<div class="heatmap-view" style="display: none;">
+    <div class="heatmap-container">
+        <h3>Your Personalized Crime Heatmap</h3>
+        <p class="heatmap-description">This heatmap shows predicted crime risk across the area based on your profile and our random forest model.</p>
+        
+        <div class="heatmap-legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #00ac46;"></span>
+                <span>Low Risk</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #fd8c00;"></span>
+                <span>Medium Risk</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background-color: #dc0000;"></span>
+                <span>High Risk</span>
+            </div>
+        </div>
+        
+        <div class="heatmap-visualization">
+            <!-- D3.js will render the heatmap here -->
+        </div>
+        
+        <div class="heatmap-insights">
+            <h4>Risk Insights</h4>
+            <p>This visualization displays crime risk patterns based on:</p>
+            <ul>
+                <li>Your demographic information</li>
+                <li>Time of day</li>
+                <li>Geographic location</li>
+                <li>Historical crime data</li>
+            </ul>
+            <p class="disclaimer">Note: This is a predictive model based on historical patterns and may not represent current conditions.</p>
+        </div>
+        
+        <button id="back-to-results" class="action-button">
+            <span>Back to Results</span>
+            <i class="fas fa-arrow-left"></i>
+        </button>
+    </div>
+</div>
+
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <script src="heatmap-generator.js"></script>
+    <script src="heatmap-renderer.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

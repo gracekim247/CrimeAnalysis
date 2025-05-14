@@ -46,6 +46,19 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- SparkJava -->
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>2.9.4</version>
+    </dependency>
+
+    <!-- JSON parsing -->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
 
     <!-- (Optional) Smile plotting if you use Plots.heatmap() 
    <dependency>

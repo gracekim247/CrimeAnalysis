@@ -81,12 +81,12 @@ public class CrimeDataset {
        // Calculate thresholds for high, medium, and low risks
        int total = countList.size();
        int p50 = countList.get(total / 2);
-       int p75 = countList.get((int)(total * 0.75));
+       int p80 = countList.get((int)(total * 0.80));
 
        // Set a risk label for each record based on above calculation
        for (CrimeRecord r : records) {
            int count = groupCounts.getOrDefault(r.getGroupKey(), 0);
-           if (count >= p75) {
+           if (count >= p80) {
                r.setRiskLabel("High");
            } else if (count >= p50) {
                r.setRiskLabel("Medium");

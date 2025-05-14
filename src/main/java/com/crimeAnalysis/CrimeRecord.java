@@ -32,7 +32,7 @@ public class CrimeRecord {
     );
     
     // 1b) a method to encode race categories
-    static int getRaceIndex(String race) {
+    public static int getRaceIndex(String race) {
         return switch (race) {
             case "BLACK" -> 0;
             case "WHITE" -> 1;

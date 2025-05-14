@@ -12,14 +12,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
     <script src="https://cdn.apple-mapkit.com/mk/5.x.x/mapkit.js"></script>
-    <style>
-        /* Add this to ensure the map container has a height */
-        #map {
-            height: 500px;
-            width: 100%;
-            border-radius: 8px;
-        }
-    </style>
+    
 </head>
 
 <body>
@@ -59,7 +52,7 @@
                     <h2 class="form-title">Your Safety Profile</h2>
                     <p class="form-subtitle">Enter your details for a personalized risk assessment</p>
 
-                    <form id="risk-form">
+                    <form id="risk-form" action="/processRisk" method="POST">
                         <!-- Age, Sex, Race in one row -->
                         <div class="form-row demographics-row">
                             <div class="form-group">
@@ -99,11 +92,12 @@
                                 <label for="location">Your Location</label>
                                 <div class="input-with-button">
                                     <input id="location" name="location" type="text" placeholder="Enter your location"
-                                        required />
-                                    <button type="button" class="inline-button" onclick="getMyLocation()">
+                                        required oninput="debouncedSearch()" />
+                                    <button type="button" class="inline-button" aria-label="Use my current location" onclick="getMyLocation()">
                                         Use My Location
                                     </button>
                                 </div>
+                                <ul id="suggestions" class="suggestion-list"></ul>
                             </div>
                         </div>
 
@@ -152,7 +146,8 @@
             <div class="heatmap-view" style="display: none;">
                 <div class="heatmap-container">
                     <h3>Your Personalized Crime Heatmap</h3>
-                    <p class="heatmap-description">Crime hotspots based on your demographic profile</p>
+                    <p class="disclaimer">This heatmap shows predicted crime risk across the area based on your profile and our random forest model.</p>
+                    
                     <div class="heatmap-legend">
                         <div class="legend-item">
                             <span class="legend-color" style="background-color: #dc0000;"></span>
@@ -167,7 +162,21 @@
                             <span>Low Risk</span>
                         </div>
                     </div>
+
+                    <!-- <div class="heatmap-insights">
+                        <h4>Risk Insights</h4>
+                        <p>This visualization displays crime risk patterns based on:</p>
+                        <ul>
+                            <li>Your demographic information</li>
+                            <li>Time of day</li>
+                            <li>Geographic location</li>
+                            <li>Historical crime data</li>
+                        </ul>
+                    </div> -->
+
                     <div id="map" style="height: 500px; width: 100%;"></div>
+                    <p class="disclaimer">Note: This is a predictive model based on historical patterns and may not represent current conditions.</p>
+
                     <button id="back-to-results" class="action-button">
                         <span>Back to Results</span>
                         <i class="fas fa-arrow-left"></i>
@@ -176,11 +185,11 @@
             </div>
         </div>
         
-        <div class="heatmap-visualization">
-            <!-- D3.js will render the heatmap here -->
-        </div>
+        <!-- <div class="heatmap-visualization">
+            D3.js will render the heatmap here
+        </div> -->
         
-        <div class="heatmap-insights">
+        <!-- <div class="heatmap-insights">
             <h4>Risk Insights</h4>
             <p>This visualization displays crime risk patterns based on:</p>
             <ul>
@@ -190,16 +199,13 @@
                 <li>Historical crime data</li>
             </ul>
             <p class="disclaimer">Note: This is a predictive model based on historical patterns and may not represent current conditions.</p>
-        </div>
+        </div> -->
         
-        <button id="back-to-results" class="action-button">
+        <!-- <button id="back-to-results" class="action-button">
             <span>Back to Results</span>
             <i class="fas fa-arrow-left"></i>
-        </button>
-    </div>
-</div>
-
-        </div>
+        </button> -->
+        
     </main>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <script src="heatmap-generator.js"></script>

@@ -6,16 +6,10 @@
   <!-- 1. Model version -->
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- 2. Your coordinates -->
   <groupId>crimeAnalysis</groupId>
   <artifactId>crimeAnalysis</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-
-  <!-- 3. Metadata (optional but recommended) -->
-  <!-- <name>Crime Risk Prediction</name>
-  <description>Java application for crime risk analysis using Smile</description>
-  <url>https://github.com/gracekim247/CrimeAnalysis</url> -->
 
   <!-- 4. Java version & encoding -->
   <properties>
@@ -42,9 +36,17 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
-      <version>5.9.0</version>
+      <version>5.10.0</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.5.0</version>
+      <scope>test</scope>
+    </dependency>
+
 
     <!-- SparkJava -->
     <dependency>
@@ -60,17 +62,8 @@
       <version>2.10.1</version>
     </dependency>
 
-    <!-- (Optional) Smile plotting if you use Plots.heatmap() 
-   <dependency>
-      <groupId>com.github.haifengl</groupId>
-      <artifactId>smile-plot</artifactId>
-      <version>4.3.0</version>
-    </dependency> -->
-
-    <!-- Add any other libraries you need here -->
   </dependencies>
 
-  <!-- 6. (Optional) Build plugins, e.g. for shading -->
   <!-- <build>
     <plugins>
       Example: Maven Shade Plugin to build a fat JAR

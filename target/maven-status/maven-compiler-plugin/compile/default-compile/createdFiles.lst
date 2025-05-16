@@ -1,3 +1,4 @@
+com/crimeAnalysis/TrainSaveLoadRF.class
 com/crimeAnalysis/model/DecisionTreeModel$Split.class
 com/crimeAnalysis/model/DecisionTreeModel.class
 com/crimeAnalysis/model/DecisionTreeNode.class
@@ -6,5 +7,7 @@ com/crimeAnalysis/CrimeDataset.class
 com/crimeAnalysis/model/DecisionTreeModel$Partition.class
 com/crimeAnalysis/model/RandomForestModel.class
 com/crimeAnalysis/testrun.class
+com/crimeAnalysis/api/RiskApi.class
 com/crimeAnalysis/CrimeRecord.class
-com/crimeAnalysis/CrimeDatasetTest.class
+com/crimeAnalysis/api/RiskApi$PredictionRequest.class
+com/crimeAnalysis/api/RiskApi$PredictionResponse.class

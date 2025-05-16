@@ -1,27 +1,20 @@
 package com.crimeAnalysis.model;
 
-/**
- * A node in the decision tree. Can be either an internal decision node or a leaf node.
- */
 public class DecisionTreeNode {
     int featureIndex;
     double threshold;
     DecisionTreeNode left;
     DecisionTreeNode right;
-    int label;        // Class label for leaf nodes
+    int label;        
     boolean isLeaf;
 
-    /**
-     * Constructor for leaf node
-     */
+    //leaf node
     public DecisionTreeNode(int label) {
         this.label = label;
         this.isLeaf = true;
     }
 
-    /**
-     * Constructor for internal decision node
-     */
+    //internal node
     public DecisionTreeNode(int featureIndex, double threshold, DecisionTreeNode left, DecisionTreeNode right) {
         this.featureIndex = featureIndex;
         this.threshold = threshold;
@@ -30,9 +23,7 @@ public class DecisionTreeNode {
         this.isLeaf = false;
     }
 
-    /**
-     * Predict the label for a single feature vector
-     */
+    //predict label for single feature
     public int predict(double[] x) {
         if (isLeaf) {
             return label;

@@ -11,7 +11,7 @@ public class CrimeDataset {
 
    public void load(String filepath) throws IOException {
        List<String> lines = Files.readAllLines(Paths.get(filepath));
-       lines.remove(0); // remove header
+       lines.remove(0); 
 
        for (String line : lines) {
            String[] parts = line.split(",");
@@ -97,7 +97,7 @@ public class CrimeDataset {
    }
 
     // Converts processed records into a 2D feature array for SMILE. 
-    // [ ageIndex, sexIndex, raceIndex, boroughIndex, hour, latitude, longitude ]
+    // ex: [ ageIndex, sexIndex, raceIndex, boroughIndex, hour, latitude, longitude ]
     public double[][] getFeatureArray() {
         double[][] features = new double[records.size()][];
         for (int i = 0; i < records.size(); i++) {
@@ -118,22 +118,5 @@ public class CrimeDataset {
     public List<CrimeRecord> getRecords() {
         return records;
     }
-
-    //test 
-    // public static void main(String[] args) throws IOException {
-    //     if (args.length != 1) {
-    //         System.err.println("Usage: java com.crimeAnalysis.CrimeDataset <csv-path>");
-    //         System.exit(1);
-    //     }
-    //     CrimeDataset ds = new CrimeDataset();
-    //     ds.load(args[0]);
-    //     ds.imputeMissingValues();
-    //     ds.labelData();
-    //     System.out.println("Records: " + ds.getRecords().size());
-
-    //     for (CrimeRecord r : ds.getRecords()) {
-    //         System.out.println(r);
-    //     }
-    // }
 }
 

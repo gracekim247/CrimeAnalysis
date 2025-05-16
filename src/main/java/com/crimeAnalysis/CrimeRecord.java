@@ -1,8 +1,5 @@
 package com.crimeAnalysis;
 
-// import java.io.*;
-// import java.nio.file.*;
-//import java.util.Map;
 import java.util.Map;
 
 public class CrimeRecord {
@@ -16,7 +13,7 @@ public class CrimeRecord {
     String vicSex;
     String riskLabel;
 
-    // 1a) encode each category as an integer
+    //encode each category as an integer
     public static final Map<String,Integer> ageMap = Map.of(
         "<18", 0, "18-24", 1, "25-44", 2, "45-64", 3, "65+", 4
     );
@@ -31,7 +28,6 @@ public class CrimeRecord {
         "STATEN ISLAND", 4
     );
     
-    // 1b) a method to encode race categories
     public static int getRaceIndex(String race) {
         return switch (race) {
             case "BLACK" -> 0;
@@ -43,7 +39,7 @@ public class CrimeRecord {
         };
     }
 
-    /** Map the fields into a numeric feature vector */
+    //Map fields into a numeric feature vector
     public double[] toFeatureVector() {
         int ageIdx     = CrimeRecord.ageMap.getOrDefault(vicAge, 0);
         int sexIdx     = CrimeRecord.sexMap.getOrDefault(vicSex, 0);
@@ -53,7 +49,7 @@ public class CrimeRecord {
         return new double[]{ageIdx, sexIdx, raceIdx, boroughIdx, hour, latitude, longitude};
     }
 
-    /** Convert your riskLabel string into the matching int code */
+    //Convert your riskLabel string into matching int code
     public int toLabelIndex() {
         switch (riskLabel) {
             case "Low":    return 0;
@@ -83,13 +79,6 @@ public class CrimeRecord {
         this.riskLabel = label;
     }
 
-    //testing
-    // public String toString() {
-    //     return String.format(
-    //     "CrimeRecord{date=%s, time=%s, borough=%s, lat=%.6f, lng=%.6f, age=%s, race=%s, sex=%s, label=%s}",
-    //     date, time, borough, latitude, longitude, vicAge, vicRace, vicSex, riskLabel
-    //     );
-    // }
     public String toString() {
         return String.format(
             "CrimeRecord[date=%s, time=%s, borough=%s, lat=%.6f, lon=%.6f, age=%s, race=%s, sex=%s, label=%s]",

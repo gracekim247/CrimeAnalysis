@@ -2,24 +2,16 @@ package com.crimeAnalysis.model;
 
 import com.crimeAnalysis.CrimeDataset;
 
-// import java.io.*;
-// import java.net.URISyntaxException;
-// import java.util.*;
-// import java.util.stream.IntStream;
-
 import smile.data.DataFrame;
 import smile.data.formula.Formula;
 import smile.base.cart.SplitRule;
 import smile.classification.RandomForest;
 import smile.data.vector.IntVector;
-// import smile.validation.ClassificationValidation;
-// import smile.validation.metric.Accuracy;
 
 public class RandomForestModel {
    public static void main(String[] args) throws Exception {
       CrimeDataset ds = new CrimeDataset();
 
-      //ds.load("data/toyDataset.csv");
       ds.load(args[0]);
       ds.imputeMissingValues();
       ds.labelData();
@@ -31,17 +23,13 @@ public class RandomForestModel {
       // build DataFrame from features
       String[] featureNames = {"age", "sex", "race", "borough", "hour", "latitude", "longitude"};
 
-      // DataFrame df = DataFrame
-      //       .of(x, featureNames)
-      //       .merge(new DataFrame(new IntVector("label", y)));
       DataFrame df = DataFrame.of(x, featureNames)
             .merge(IntVector.of("label", y));
 
 
-      // 4) Specify the formula for supervised learning
       Formula formula = Formula.lhs("label");
 
-      // 5) Hyperparameters for RF (Smile 2.x style)
+      // Hyperparameters for RF 
       int    ntrees    = 150;
       int    mtry      = (int)Math.sqrt(featureNames.length);
       SplitRule rule   = SplitRule.GINI;
@@ -50,7 +38,7 @@ public class RandomForestModel {
       int    nodeSize  = 50;
       double subsample = 0.7;
 
-      // 6) Train using the 9-arg overload available in Smile 2.6.0
+      // 9-arg overload train
       RandomForest rf = RandomForest.fit(
           formula,
           df,
@@ -81,7 +69,6 @@ public class RandomForestModel {
       double accuracy = (double) correct / actual.length;
       double error = 1.0 - accuracy;
       
-      // Print results
       System.out.printf("RandomForest with %d trees, error rate = %.4f%n",
          rf.size(), error
       );

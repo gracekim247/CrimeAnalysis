@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A simple CART decision tree implementation.
- */
 public class DecisionTreeModel {
     private DecisionTreeNode root;
     private int maxDepth;
@@ -20,16 +17,12 @@ public class DecisionTreeModel {
         this.minSamplesSplit = minSamplesSplit;
     }
 
-    /**
-     * Train the decision tree on the provided data
-     */
+    //Train tree with data
     public void train(double[][] X, int[] y) {
         this.root = buildTree(X, y, 0);
     }
 
-    /**
-     * Recursively build the tree
-     */
+    //Build tree recursively 
     private DecisionTreeNode buildTree(double[][] X, int[] y, int depth) {
         int nSamples = y.length;
         if (depth >= maxDepth || nSamples < minSamplesSplit || isPure(y)) {
@@ -47,9 +40,7 @@ public class DecisionTreeModel {
         return new DecisionTreeNode(bestSplit.featureIndex, bestSplit.threshold, left, right);
     }
 
-    /**
-     * Predict labels for a set of samples
-     */
+    //Predict labels of a set of samples
     public int[] predict(double[][] X) {
         int[] preds = new int[X.length];
         for (int i = 0; i < X.length; i++) {

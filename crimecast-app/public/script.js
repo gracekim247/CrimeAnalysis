@@ -56,9 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log('calling geocode…')
         
         try {
-            if (!address.toLowerCase().includes('new york')) {
+            // if (!address.toLowerCase().includes('new york')) {
+            if (!/,\s*(ny|new york)/i.test(address)){
                 address += ', New York';
             }
+            
             const encodedAddress = encodeURIComponent(address);
             const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}&limit=1`);
             const data = await response.json();
@@ -184,6 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(async () => {
             try {
                 if (!map) {
+                    coords = await getCoordinatesFromAddress(addr);
+                    console.log("🗺️ Geocoded to:", coords.displayName, coords.lat, coords.lon);
+
                     map = await initMap([coords.lat, coords.lon]);
                 } else {
                     map.setView([coords.lat, coords.lon], 15);

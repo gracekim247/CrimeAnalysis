@@ -40,8 +40,7 @@ import com.crimeAnalysis.model.DecisionTreeNode;
  * 3. RandomForest::getRandomSubset(dataset) test
  * 4.  RandomForest::aggregate(trainedTrees) test
  * 5. RandomForest::createBootstrappedSample(dataset) test
-
- *  classifyRisk() 
+ *
  *  
  * These methods are part of the Smile library and are assumed correct. The tests below
  * focus on our own code: data loading, imputation, label-generation, tree traversal logic,
@@ -160,23 +159,18 @@ public class CrimeAnalysisTests {
         @Test
         void labelData_assignsHighAndLowCorrectly() {
             CrimeDataset ds = new CrimeDataset();
-            // manually populate records
             ds.records = new ArrayList<>();
-            // Three records for borough 'A'
             for (int i = 0; i < 3; i++) {
                 CrimeRecord rec = new CrimeRecord();
                 rec.borough = "A";
                 ds.records.add(rec);
             }
-            // One record for borough 'B'
             CrimeRecord recB = new CrimeRecord();
             recB.borough = "B";
             ds.records.add(recB);
 
-            // run labeling logic
             ds.labelData();
 
-            // count how many High vs Low
             Map<String, Long> counts = ds.records.stream()
                 .collect(Collectors.groupingBy(r -> r.riskLabel, Collectors.counting()));
             assertEquals(3L, counts.get("High"), "Three records should be labeled High");
